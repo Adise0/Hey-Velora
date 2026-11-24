@@ -1,0 +1,39 @@
+# --- Unreal generated folders (project and plugins) ---
+/Binaries/
+/DerivedDataCache/
+/Intermediate/
+/Saved/
+/Plugins/**/Binaries/
+/Plugins/**/Intermediate/
+
+# Packaging output; keep icons, which are project source
+/Build/*
+!/Build/*/
+/Build/*/**
+!/Build/*/*.ico
+
+# Starter content can be re-added from the editor
+/Content/StarterContent/
+
+# --- IDE files generated from the .uproject / *.Build.cs / *.Target.cs ---
+/*.sln
+/*.slnx
+/*.code-workspace
+/.ignore
+/.vs/
+/.vscode/
+/.idea/
+*.suo
+*.user
+*.VC.db
+*.VC.opendb
+*.DotSettings.user
+
+# clangd
+/.cache/
+/compile_commands.json
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
