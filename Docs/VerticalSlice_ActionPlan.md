@@ -310,3 +310,53 @@ In priority order:
 6. How actions are described, so tags, availability and effect stay together.
 7. How rooms switch between their two looks.
 8. What is saved, and when.
+
+## 10. Project structure
+
+A proposal for section 9. Details of each class are settled when its step starts, so **don't create a file before its step**.
+
+Files live in domain folders under `Source/HeyVelora/`, with the `.h` and `.cpp` side by side. File names drop the class prefix: `AVeloraDoor` is in `VeloraDoor.h` and `VeloraDoor.cpp`. Includes start from the module root (`#include "World/VeloraDoor.h"`), which needs `PublicIncludePaths.Add(ModuleDirectory);` in `HeyVelora.Build.cs`.
+
+| Folder | Class | Kind | Files | Job | Step |
+|---|---|---|---|---|---|
+| `Game/` | `AVeloraGameMode` | `AGameModeBase` | h + cpp | Chooses the game's classes | 1 |
+| `Player/` | `AVeloraPlayerController` | `APlayerController` | h + cpp | Turns input into requests | 1 |
+| `Player/` | `UVeloraSelectionComponent` | `UActorComponent` | h + cpp | Hover and selection | 3 |
+| `Player/` | `AVeloraCamera` | `ACameraActor` | h + cpp | Top-down and isometric, and the move between them | 3 |
+| `Data/` | `UVeloraLayoutData` | `UDataAsset` | h | Rooms, waypoints, door, sensors, cameras | 2 |
+| `Data/` | `UVeloraTimetableData` | `UDataAsset` | h | One resident's day | 2 |
+| `Simulation/` | Enums and small structs | Structs | `VeloraSimTypes.h` | Ids, activities, events | 2 |
+| `Simulation/` | `FVeloraSimState` | Struct | h | Everything that resets | 2 |
+| `Simulation/` | `FVeloraSimulation` | Plain C++ | h + cpp | Advances one tick, applies requests, resets | 2 |
+| `Simulation/` | `UVeloraSimSubsystem` | `UTickableWorldSubsystem` | h + cpp | Owns the simulation, pause and speed, turns frame time into ticks | 2 |
+| `Knowledge/` | `UVeloraKnowledgeSubsystem` | `UGameInstanceSubsystem` | h + cpp | Breaches, logbook, facts, loop number | 4 |
+| `Knowledge/` | `UVeloraSaveGame` | `USaveGame` | h | What goes to disk | 4 |
+| `Knowledge/` | `UVeloraPerceptionSubsystem` | `UWorldSubsystem` | h + cpp | The only answer to "what may Velora show?" | 3 |
+| `Actions/` | `UVeloraAction` | Abstract `UObject` | h + cpp | Eye/hand tags, availability, effect | 3 |
+| `Actions/` | `UVeloraAction_LockDoor` | `UVeloraAction` | h + cpp | Lock / unlock | 3 |
+| `Actions/` | `UVeloraAction_AccessCameras` | `UVeloraAction` | h + cpp | The breach | 4 |
+| `World/` | `IVeloraSelectable` | Interface | h | Anything that can be clicked | 3 |
+| `World/` | `AVeloraRoom` | `AActor` | h + cpp | Displays a room, in either look | 3 |
+| `World/` | `AVeloraDoor` | `AActor` | h + cpp | Displays the door | 3 |
+| `World/` | `AVeloraResident` | `AActor` | h + cpp | Displays R5 as blip or body | 3 |
+| `UI/` | `UVeloraHudWidget` | `UUserWidget` | h + cpp | Clock, loop, speeds | 3 |
+| `UI/` | `UVeloraActionPanelWidget` | `UUserWidget` | h + cpp | Actions of the selection | 3 |
+| `UI/` | `UVeloraLogbookWidget` | `UUserWidget` | h + cpp | Routine strip and entries | 4 |
+| `Tests/` | Simulation tests | Automation tests | `VeloraSimTests.cpp` | Repeat test and door table | 2 |
+
+### Who may include whom
+
+- **`Simulation/` and `Data/`** know nothing about the other folders. That keeps the simulation testable and deterministic.
+- **`World/` and `UI/`** get what they display through `UVeloraPerceptionSubsystem`, never from the simulation.
+- **`Player/`** and **`Actions/`** send requests. They don't change state directly.
+- **`Knowledge/`** listens to simulation events. The simulation never calls it.
+
+### Content folders
+
+| Folder | Contents |
+|---|---|
+| `Content/Blueprints/` | Blueprint children of the C++ classes (`BP_`) |
+| `Content/Data/` | Layout and timetable assets (`DA_`) |
+| `Content/Inputs/` | Actions (`IA_`) and mapping context (`IMC_`) |
+| `Content/UI/` | Widgets (`WBP_`) |
+| `Content/Greybox/` | Placeholder meshes and materials |
