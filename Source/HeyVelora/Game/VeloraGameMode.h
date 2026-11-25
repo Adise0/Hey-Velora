@@ -2,9 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "VeloraGameMode.generated.h" // always the last include
+#include "VeloraGameMode.generated.h"
 
-/** Chooses the game's classes. */
 UCLASS()
 class HEYVELORA_API AVeloraGameMode : public AGameModeBase {
   GENERATED_BODY()

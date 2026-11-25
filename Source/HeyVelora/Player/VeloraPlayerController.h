@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "VeloraPlayerController.generated.h" // always the last include
+#include "VeloraPlayerController.generated.h"
 
 class UInputAction;
 class UInputMappingContext;

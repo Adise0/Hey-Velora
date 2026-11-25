@@ -1,5 +1,4 @@
 #include "Game/VeloraGameMode.h"
-
 #include "Player/VeloraPlayerController.h"
 
 AVeloraGameMode::AVeloraGameMode() {
